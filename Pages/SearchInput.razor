@@ -1,0 +1,22 @@
+﻿@inject NavigationManager NavigationManager
+
+
+<div class="search-input">
+<input type="text" @bind = "searchTerm" @bind:event ="oninput" placeholder="Search..." />
+    <button @onclick = "handleSearch"  class="btn btn-primary">Search</button>
+
+</div>
+
+
+
+@code {
+private string searchTerm = string.Empty;
+
+
+
+private void handleSearch()
+{
+    NavigationManager.NavigateTo($"/SearchResults/{searchTerm}");
+
+}
+}

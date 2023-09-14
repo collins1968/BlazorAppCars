@@ -1,0 +1,48 @@
+﻿
+@inject HttpClient Http
+@page "/CarDetails/{id:int}"
+
+
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Search</li>
+           
+        </ol>
+    </nav>
+    <div class="col-md-12">
+        
+
+@*<DisplayCar carDto="car" />*@
+
+        <div class="card shadow  m-2" style="width: 100%;">
+            <img src="@car.Image" class="card-img-top" alt="@car.Name">
+            <div class="card-body">
+                <h5 class="card-title">@car.Name</h5>
+                <h6 class="card-subtitle mb-3 text-muted">@car.Description</h6>
+                <div>
+                    <span>@car.Color </span>
+                    <span>@car.Price.ToString("c0") </span>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+@code {
+[Parameter]
+        public int id { get; set; }
+    
+        private CarDto car = new CarDto();
+    
+        protected override async Task OnInitializedAsync()
+        {
+            var cars = await Http.GetFromJsonAsync<List<CarDto>>("sample-data/cars.json");
+            car = cars.FirstOrDefault(c => c.Id == id);
+        }
+
+}

@@ -1,0 +1,32 @@
+﻿@inject HttpClient http
+@inject NavigationManager NavigationManager
+@page "/"
+
+<SearchInput />
+<button type="button" class="btn btn-primary" @onclick="handleAddCar">Add Car</button>
+<div class="row">
+    
+
+    @foreach (var car in cars)
+    {
+        <div class = "col-md-4">
+        <DisplayCar carDto="car" />
+</div>
+    }
+</div>
+
+@code {
+
+    private List<CarDto> cars = new List<CarDto>(); // <-- Add this line
+
+    protected override async Task OnInitializedAsync()
+    {
+       
+            cars = await http.GetFromJsonAsync<List<CarDto>>("sample-data/cars.json");
+    }
+
+private void handleAddCar()
+    {
+        NavigationManager.NavigateTo("/AddCarForm");
+    }
+}

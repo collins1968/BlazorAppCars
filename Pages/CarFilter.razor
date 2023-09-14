@@ -1,0 +1,28 @@
+﻿@*filter by max price*@
+
+@inject NavigationManager NavigationManager
+
+
+
+<div >
+<label for="maxPrice">Max Price</label>
+<input type="number" id="maxPrice" @bind="maxPrice" @bind:event="oninput" />
+<button @onclick="handleFilter" class="btn btn-primary"> Filter</button>
+
+</div>
+
+@code {
+
+
+    [Parameter , EditorRequired]
+    public string searchTerm { get; set; }
+
+
+    private int maxPrice;
+
+private void handleFilter()
+{
+        NavigationManager.NavigateTo($"/SearchResults/{searchTerm}/maxPrice/{maxPrice}");
+}
+}
+

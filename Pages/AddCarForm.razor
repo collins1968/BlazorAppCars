@@ -1,0 +1,73 @@
+﻿@page "/AddCarForm"
+
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">addcarform</li>
+        </ol>
+    </nav>
+</div>
+<EditForm Model="cars" OnValidSubmit="submitForm">
+    <DataAnnotationsValidator />
+    <label>Name</label>
+    <InputText @bind-Value="cars.Name" class="form-control"/>
+    <ValidationMessage For="@(() => cars.Name)" />
+
+    <label>Color</label>
+    <InputSelect @bind-Value="cars.Color" class="form-control">
+        <option value="">Select a color</option>
+        @foreach (var color in colors)
+        {
+            <option value="@color">@color</option>
+        }
+    </InputSelect>
+    <ValidationMessage For="@(() => cars.Color)" />
+
+   <label>Price</label>
+   <InputNumber @bind-Value="cars.Price" class="form-control"/>
+   <ValidationMessage For="@(() => cars.Price)" />
+
+<label>Description</label>
+<InputText @bind-Value="cars.Description" class="form-control"/>
+<ValidationMessage For="@(() => cars.Description)" />
+
+<label>Image</label>
+<InputText @bind-Value="cars.Image" class="form-control"/>
+<ValidationMessage For="@(() => cars.Image)" />
+@foreach(var make in cars.Makes)
+{
+   <div>
+      
+            <label>Make</label>
+              <InputText @bind-Value="@make.ModelName" class="form-control" @onfocusin="addInput" />
+              <button type="button" class="btn btn-primary mt-3" @onclick = "(() =>  cars.Makes.Remove(make))">X</button>
+              <ValidationMessage For="@(() => make.ModelName)" />
+     
+   </div>
+}
+
+<button type="button"  onclick="@(()=>cars.Makes.Add(new Make()))" class=" mt-4 btn btn-primary">Add Model </button>
+<button type="submit" class="btn btn-primary mt-3">Submit</button>
+
+</EditForm>
+
+@code {
+
+   public AddCarDto cars = new AddCarDto();
+
+   public List<string> colors = new List<string>() { "red", "blue", "green", "yellow", "black", "white" };
+
+   private void submitForm()
+    {
+        Console.WriteLine("Form submitted");
+    }
+
+     private void addInput()
+    {
+
+        Console.WriteLine("creating");
+        cars.Makes.Add(new Make());
+    }
+
+}

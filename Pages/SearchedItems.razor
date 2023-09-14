@@ -1,0 +1,62 @@
+﻿@inject HttpClient http
+@page "/SearchResults/{searchTerm}"
+@page "/SearchResults/{searchTerm}/maxPrice/{maxPrice:int}"
+
+<SearchInput />
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Search</li>
+            <li class="breadcrumb-item active" aria-current="page">@searchTerm</li>
+            <CarFilter searchTerm="@searchTerm"/>
+        </ol>
+    </nav>
+</div>
+<div class="row">
+<h1>Search Results</h1>
+</div>
+<div class="row">
+
+
+    @foreach (var car in cars)
+    {
+        <div class="col-md-4">
+            <DisplayCar carDto="car" />
+        </div>
+    }
+</div>
+
+@code {
+    private List<CarDto> cars = new List<CarDto>(); // <-- Add this line
+
+    [Parameter]
+    public string searchTerm { get; set; }
+
+    [Parameter]
+    public int maxPrice { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            cars = await http.GetFromJsonAsync<List<CarDto>>("sample-data/cars.json");
+            cars = cars.Where(c => c.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+    }
+
+
+    protected override void OnParametersSet()
+    {
+        if (cars.Any() && maxPrice > 0)
+        {
+            cars = cars.Where(c => c.Price <= maxPrice).ToList();
+        }
+        else if(maxPrice == 0)
+        {
+            cars = cars;
+        }
+    }
+
+
+}

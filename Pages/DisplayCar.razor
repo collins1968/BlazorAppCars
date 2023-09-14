@@ -1,0 +1,60 @@
+﻿@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<div class="card shadow  m-2" style="width: 100%;">
+    <img src="@carDto.Image" class="card-img-top" alt="@carDto.Name">
+    <div class="card-body">
+        <h5 class="card-title">@carDto.Name</h5>
+        <h6 class="card-subtitle mb-3 text-muted">@carDto.Description</h6>
+        <div>
+
+            <span>@carDto.Color </span>
+            <span>@carDto.Price.ToString("c0") </span>
+
+            @*<a href="@($"/CarDetails/{carDto.Id}")" class="btn btn-dark">more details</a>*@
+            <button @onclick = "ConfirmBox" class="btn btn-secondary">Read More </button>
+
+
+        </div>
+
+    </div>
+</div>
+@code {
+
+[Parameter]
+public CarDto carDto { get; set; }
+
+private async Task ConfirmBox()
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to navigate away from this page?");
+
+        if (confirmed)
+        {
+            NavigateTo();
+            showSuccess();
+        }
+        else
+        {
+            showError();
+        }
+
+    }
+
+private void NavigateTo()
+{
+  NavigationManager.NavigateTo($"/CarDetails/{carDto.Id}");
+}
+
+
+
+private void showSuccess()
+{
+   JSRuntime.InvokeVoidAsync("showAlert", "thiis is your car", "success");
+}
+private void showError()
+{
+   JSRuntime.InvokeVoidAsync("showAlert", "OOOOPs!", "error");
+}
+
+}
+```
